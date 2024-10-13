@@ -16,6 +16,9 @@ public class TablePage : BasePage
     [FindBy(XPath = "//div[@class='ReactTable -striped -highlight']")]
     public Table? Table { get; set; }
 
+    [FindBy(Id = "addNewRecordButton")]
+    public Button? Add { get; set; }
+
     public TablePage OpenInBrowser(BrowserNames name, params string[] args)
     {
         OpenWith(name, args);
@@ -33,4 +36,11 @@ public class TablePage : BasePage
          Table?.GetCellFromRows(text).Click();
          return this;
     }
+
+    public RegistrationFormsWindow ClickAddButton()
+    {
+        Add.Click();
+        return new RegistrationFormsWindow();
+    }
+
 }
