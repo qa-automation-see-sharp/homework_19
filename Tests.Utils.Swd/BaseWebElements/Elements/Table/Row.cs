@@ -3,16 +3,15 @@ using Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
 
 namespace Tests.Utils.Swd.BaseWebElements.Elements.Table;
 
-public class Rows : BaseElement
+public class Row : BaseElement
 {
-    [FindBy(XPath = "//div[contains(@class,'rt-td')]")]
-    public Elements<Element> Elements { get; set; }
-    
+    [FindBy(XPath = "//div[@class='rt-td']")]
+    public Elements<Element> Cells { get; set; }
+
     public Element GetCellFromRows(string text)
     {
-        var cells = Elements.GetElements();
+        var cells = Cells.GetElements();
         var cell = cells.FirstOrDefault(e => e.GetText() == text);
         return cell;
     }
-    
 }

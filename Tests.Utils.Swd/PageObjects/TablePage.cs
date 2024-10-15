@@ -13,7 +13,7 @@ public class TablePage : BasePage
     [FindBy(XPath = "//h1[contains(text(),\"Web Tables\")]")]
     public Element? Title { get; set; }
 
-    [FindBy(XPath = "//div[@class='ReactTable -striped -highlight']")]
+    [FindBy(XPath = "//div[@class='rt-tbody']")]
     public Table? Table { get; set; }
 
     public TablePage OpenInBrowser(BrowserNames name, params string[] args)
