@@ -11,7 +11,7 @@ public class Rows : BaseElement
     public Element GetCellFromRows(string text)
     {
         var cells = Elements.GetElements();
-        var cell = cells.FirstOrDefault(e => e.Text == text);
+        var cell = cells.FirstOrDefault(e => e.GetText() == text);
         return cell;
     }
     

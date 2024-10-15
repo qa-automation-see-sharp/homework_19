@@ -6,10 +6,10 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements;
 public class Elements<T> : BaseElement
     where T : BaseElement, new()
 {
-    public Elements(By locator, IWebElement parent)
+    public Elements(By locator, BaseElement parent)
     {
         Locator = locator;
-        ParentElement = parent;
+        Parent = parent;
     }
 
     public int Count => FindElements<T>().Count();

@@ -14,7 +14,7 @@ public static class InitializationHelper
         InitializeElements(page, null);
     }
 
-    public static void InitializeElements(object page, IWebElement? parent)
+    public static void InitializeElements(object page, BaseElement? parent)
     {
         // Get all the fields and properties marked with the FindBy attribute
         var members = page.GetType()
@@ -43,10 +43,8 @@ public static class InitializationHelper
                     if (IsCompositeElement(field.FieldType))
                     {
                         // Pass the parent element for scoping
-                        InitializeElements(field.GetValue(page), (field.GetValue(page) as BaseElement)?.ParentElement);
+                        InitializeElements(field.GetValue(page), (field.GetValue(page) as BaseElement)?.Parent);
                     }
-
-                    field.SetValue(page, CreateElement(field.FieldType, locator, parent));
                 }
                 // Initialize properties in the same way as fields
                 else if (member is PropertyInfo property)
@@ -62,37 +60,37 @@ public static class InitializationHelper
                     if (IsCompositeElement(property.PropertyType))
                     {
                         // Pass the parent element for scoping
-                        InitializeElements(property.GetValue(page),
-                            (property.GetValue(page) as BaseElement)?.ParentElement);
+                        InitializeElements(property.GetValue(page), (property.GetValue(page) as BaseElement)?.Parent);
                     }
                 }
             }
         }
     }
 
-    private static object? CreateElement(Type element, By locator, IWebElement? parent)
+    private static object? CreateElement(Type element, By locator, BaseElement? parent)
     {
         if (!typeof(BaseElement).IsAssignableFrom(element)) throw new ArgumentException("Invalid element type");
         if (element == typeof(Element))
-            return new Element { Locator = locator, ParentElement = parent };
+            return new Element { Locator = locator, Parent = parent };
         if (element == typeof(Button))
-            return new Button { Locator = locator, ParentElement = parent };
+            return new Button { Locator = locator, Parent = parent };
         if (element == typeof(CheckBox))
-            return new CheckBox { Locator = locator, ParentElement = parent };
+            return new CheckBox { Locator = locator, Parent = parent };
         if (element == typeof(Input))
-            return new Input { Locator = locator, ParentElement = parent };
+            return new Input { Locator = locator, Parent = parent };
         if (element == typeof(RadioButton))
-            return new RadioButton { Locator = locator, ParentElement = parent };
+            return new RadioButton { Locator = locator, Parent = parent };
         if (element == typeof(Table))
-            return new Table { Locator = locator, ParentElement = parent };
+            return new Table { Locator = locator, Parent = parent };
         if (element == typeof(Rows))
-            return new Rows { Locator = locator, ParentElement = parent };
+            return new Rows { Locator = locator, Parent = parent };
         if (IsGenericType(element))
         {
             var elementType = element.GetGenericArguments()[0];
-            return Activator.CreateInstance(
+            var returnObject = Activator.CreateInstance(
                 typeof(Elements<>).MakeGenericType(elementType),
                 locator, parent) as BaseElement;
+            return returnObject;
         }
 
         throw new ArgumentException("Invalid element type");

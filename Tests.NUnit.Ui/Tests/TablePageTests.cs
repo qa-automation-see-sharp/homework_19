@@ -18,11 +18,11 @@ public class TablePageTests
     [Test]
     public void OpenWebTablePage_TitleIsCorrect()
     {
-        var title = _tablePage.Title?.Text;
+        var title = _tablePage.Title?.GetText();
 
         var cellKierra = _tablePage.Table?.GetCellFromRows("Kierra");
             cellKierra?.Click();
-        var cellKierraText = cellKierra?.Text;
+        var cellKierraText = cellKierra?.GetText();
 
         Assert.Multiple(() =>
         {

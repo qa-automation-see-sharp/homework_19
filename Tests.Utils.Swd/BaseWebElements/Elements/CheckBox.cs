@@ -4,5 +4,5 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements;
 
 public class CheckBox : BaseElement
 {
-    public bool Checked => Selected;
+    public bool Checked => IsSelected();
 }

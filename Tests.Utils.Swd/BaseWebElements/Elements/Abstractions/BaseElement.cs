@@ -8,79 +8,163 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
 
 public abstract class BaseElement
 {
-    protected IWebElement? Element;
-    public IWebElement? ParentElement { get; set; }
     public By? Locator { get; init; }
+    public BaseElement? Parent { get; init; }
 
-    public string TagName => WaitAndHandleExceptions(() => GetWrappedElement.TagName);
-    public string Text => WaitAndHandleExceptions(() => GetWrappedElement.Text);
-    public bool Enabled => WaitAndHandleExceptions(() => GetWrappedElement.Enabled);
-    public bool Selected => WaitAndHandleExceptions(() => GetWrappedElement.Selected);
-    public bool Displayed => WaitAndHandleExceptions(() => GetWrappedElement.Displayed);
-    public Point Location => WaitAndHandleExceptions(() => GetWrappedElement.Location);
-    public Size Size => WaitAndHandleExceptions(() => GetWrappedElement.Size);
+    public IWebElement? WrappedIWebElement { get; set; }
 
     protected BaseElement()
     {
-        InitializationHelper.InitializeElements(this, ParentElement);
+        InitializationHelper.InitializeElements(this, Parent);
     }
 
-    protected IWebElement GetWrappedElement => Element ??= FindElement();
-
+    //Potential hidden recursion
     protected IWebElement FindElement()
     {
         var by = Locator;
-        return WaitAndHandleExceptionOrResult(()=> ParentElement is null
-                    ? WebDriverFactory.Driver.FindElement(by)
-                    : ParentElement.FindElement(by),
-            element => element is null or { Displayed: false } or { Enabled: false });
-        ;
+        if (Parent is null)
+        {
+            var element = WaitAndHandleExceptionOrResult(
+                () => WebDriverFactory.Driver.FindElement(by),
+                e => e is null);
+            return element;
+        }
+        else
+        {
+            var parentElement = Parent.FindElement();
+            var element = WaitAndHandleExceptionOrResult(
+                () => parentElement.FindElement(by),
+                e => e is null);
+            return element;
+        }
     }
 
-    public IEnumerable<T> FindElements<T>() where T : BaseElement, new()
+    //Potential hidden recursion
+    protected IEnumerable<T> FindElements<T>() where T : BaseElement, new()
     {
         var by = Locator;
-        return WaitAndHandleExceptionOrResult(() =>
+        if (Parent is null)
         {
-            var elements = (ParentElement is null
-                    ? WebDriverFactory.Driver.FindElements(by)
-                    : ParentElement.FindElements(by))
-                .Select(e => new T { Element = e, Locator = by }).ToList();
+            var elements = WaitAndHandleExceptionOrResult(() => WebDriverFactory.Driver.FindElements(by)
+                    .Select(e => new T { WrappedIWebElement = e, Locator = by }).ToList(),
+                elements => elements.Count == 0);
             return elements;
-        },
-        elements => elements.Count == 0);
+        }
+        else
+        {
+            var parentElement = Parent.FindElement();
+            var elements = WaitAndHandleExceptionOrResult(() => parentElement.FindElements(by)
+                    .Select(e => new T { WrappedIWebElement = e, Locator = by }).ToList(),
+                elements => elements.Count == 0);
+            return elements;
+        }
     }
     
-    public void Clear() => WaitAndHandleExceptions(() => FindElement().Clear());
+    public string GetTagName()
+    {
+        var element = FindElement();
+        var tagName = WaitAndHandleExceptions(() => element.TagName);
+        return tagName;
+    }
 
-    public void SendKeys(string text) => WaitAndHandleExceptions(() => FindElement().SendKeys(text));
+    public string GetText()
+    {
+        var element = FindElement();
+        var text = WaitAndHandleExceptions(() => element.Text);
+        return text;
+    }
 
-    public void Submit() => WaitAndHandleExceptions(() => FindElement().Submit());
+    public bool IsEnabled()
+    {
+        var element = FindElement();
+        var enabled = WaitAndHandleExceptions(() => element.Enabled);
+        return enabled;
+    }
 
-    public void Click() => WaitAndHandleExceptions(() => FindElement().Click());
+    public bool IsSelected()
+    {
+        var element = FindElement();
+        var selected = WaitAndHandleExceptions(() => element.Selected);
+        return selected;
+    }
+
+    public bool IsDisplayed()
+    {
+        var element = FindElement();
+        var displayed = WaitAndHandleExceptions(() => element.Displayed);
+        return displayed;
+    }
+
+    public Point GetLocation()
+    {
+        var element = FindElement();
+        var location = WaitAndHandleExceptions(() => element.Location);
+        return location;
+    }
+
+    public Size GetSize()
+    {
+        var element = FindElement();
+        var size = WaitAndHandleExceptions(() => element.Size);
+        return size;
+    }
+
+    public void Clear()
+    {
+        var element = FindElement();
+        WaitAndHandleExceptions(() => element.Clear());
+    }
+
+    public void SendKeys(string text)
+    {
+        var element = FindElement();
+        WaitAndHandleExceptions(() => element.SendKeys(text));
+    }
+
+    public void Submit()
+    {
+        var element = FindElement();
+        WaitAndHandleExceptions(() => element.Submit());
+    }
+
+    public void Click()
+    {
+        var element = FindElement();
+        WaitAndHandleExceptions(() => element.Click());
+    }
 
     public string GetAttribute(string attributeName)
     {
-        return WaitAndHandleExceptions(() => FindElement().GetAttribute(attributeName));
+        var element = FindElement();
+        var attribute = WaitAndHandleExceptions(() => element.GetAttribute(attributeName));
+        return attribute;
     }
 
     public string GetDomAttribute(string attributeName)
     {
-        return WaitAndHandleExceptions(() => FindElement().GetAttribute(attributeName));
+        var element = FindElement();
+        var attribute = WaitAndHandleExceptions(() => element.GetAttribute(attributeName));
+        return attribute;
     }
 
     public string GetDomProperty(string propertyName)
     {
-        return WaitAndHandleExceptions(() => FindElement().GetAttribute(propertyName));
+        var element = FindElement();
+        var property = WaitAndHandleExceptions(() => element.GetDomProperty(propertyName));
+        return property;
     }
 
     public string GetCssValue(string propertyName)
     {
-        return WaitAndHandleExceptions(() => FindElement().GetCssValue(propertyName));
+        var element = FindElement();
+        var cssValue = WaitAndHandleExceptions(() => element.GetCssValue(propertyName));
+        return cssValue;
     }
 
     public ISearchContext GetShadowRoot()
     {
-        return WaitAndHandleExceptions(() => FindElement().GetShadowRoot());
+        var element = FindElement();
+        var shadowRoot = WaitAndHandleExceptions(() => element.GetShadowRoot());
+        return shadowRoot;
     }
 }

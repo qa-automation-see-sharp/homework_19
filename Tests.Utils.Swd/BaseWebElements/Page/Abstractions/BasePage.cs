@@ -8,6 +8,8 @@ namespace Tests.Utils.Swd.BaseWebElements.Page.Abstractions;
 
 public class BasePage
 {
+    public string CurrentWindowHandle { get; init; }
+
     protected BasePage()
     {
         InitializeElements(this, null);
@@ -47,6 +49,19 @@ public class BasePage
     {
         WaitAndHandleExceptions(() => Driver.Navigate().Forward());
     }
+    
+    public void SwitchToNewWindow()
+    {
+        var currentWindow = Driver.CurrentWindowHandle;
+        var windowToSwitch = Driver.WindowHandles.FirstOrDefault(w => w != currentWindow);
+        WaitAndHandleExceptions(() => Driver.SwitchTo().Window(windowToSwitch));
+    }
+    
+    public void SwitchToNewWindow(string windowName)
+    {
+        WaitAndHandleExceptions(() => Driver.SwitchTo().Window(windowName));
+    }
+
 
     public void Close()
     {

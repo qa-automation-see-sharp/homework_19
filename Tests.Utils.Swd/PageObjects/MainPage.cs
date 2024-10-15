@@ -27,7 +27,7 @@ public class MainPage : BasePage
 
     public ElementsPage ClickOnCardWithName(string cardName)
     {
-        Cards.FirstOrDefault(e => e.Text.Contains(cardName))?.Click();
+        Cards.FirstOrDefault(e => e.GetText().Contains(cardName))?.Click();
         return new ElementsPage();
     }
 }

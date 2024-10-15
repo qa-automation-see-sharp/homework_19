@@ -19,7 +19,7 @@ public class Table : BaseElement
     public Element GetHead(string text)
     {
         var heads = Heads.GetElements();
-        var head = heads.FirstOrDefault(e => e.Text == text);
+        var head = heads.FirstOrDefault(e => e.GetText() == text);
         return head;
     }
 }
