@@ -1,27 +1,42 @@
+using OpenQA.Selenium;
 using Tests.Utils.Swd.Attribute;
 using Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
+using static Tests.Utils.Swd.Helpers.TableXPathHelper;
 
 namespace Tests.Utils.Swd.BaseWebElements.Elements.Table;
 
 public class Table : BaseElement
 {
-    [FindBy(XPath = "//div[@class ='rt-thead -header']/div/div/div[@class='rt-resizable-header-content']" )]
-    public Elements<Element> Heads { get; set; }
+    [FindBy(XPath = "//div[@class ='rt-thead -header']/div/div/div[@class='rt-resizable-header-content']")]
+    public Elements<Heads> Heads { get; set; }
 
-    [FindBy(XPath = "//div[@class='rt-tr-group']/div[contains(@class,'rt-tr -odd') or contains(@class,'rt-tr -even')]")]
+    [FindBy(XPath = "//div/div[contains(@class,'rt-tr -odd') or contains(@class,'rt-tr -even')]")]
     public Elements<Row> Rows { get; set; }
-    
-    public Element? GetCellFromRows(string text)
+
+    [FindBy(XPath = "//div/div[contains(@class,'rt-tr -odd') or contains(@class,'rt-tr -even')]")]
+    public Elements<Column> Columns { get; set; }
+
+    public Table FindAllRows()
     {
-        var getCorrectRow = Rows.FirstOrDefault(r => r.WrappedIWebElement!.Text.Contains(text));
-        var cell = getCorrectRow?.GetCellFromRows(text);
-        return cell;
+        Rows.FindElements();
+        var rows = Rows.GetElements();
+        for (var i = 0; i < rows.Count; i++)
+        {
+            rows[i].Locator = By.XPath(GetRowXPath(i + 1));
+        }
+
+        return this;
     }
     
-    public Element GetHead(string text)
+    public Table FindAllColumns(int columnsCount)
     {
-        var heads = Heads.GetElements();
-        var head = heads.FirstOrDefault(e => e.GetText() == text);
-        return head;
+        Columns.FindElements();
+        var columns = Columns.GetElements();
+        for (var i = 0; i < columns.Count; i++)
+        {
+            columns[i].Locator = By.XPath(GetColumnXPath(i + 1));
+        }
+
+        return this;
     }
 }

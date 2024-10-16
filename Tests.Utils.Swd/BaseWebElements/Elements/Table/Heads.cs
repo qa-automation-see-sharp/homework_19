@@ -4,16 +4,17 @@ using Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
 
 namespace Tests.Utils.Swd.BaseWebElements.Elements.Table;
 
-public class Row : BaseElement
+public class Heads : BaseElement
 {
-    [FindBy(XPath = "//div[contains(@class,'rt-tr -odd' ) or contains(@class,'rt-tr -even')]//div[@class='rt-td']")]
+    [FindBy(XPath = "//div[@class ='rt-thead -header']/div/div/div[@class='rt-resizable-header-content']")]
     public Elements<Element> Cells { get; set; }
-
-    public Row() { }
-
-    public Row(string xpath)
+    
+    public Heads()
+    {
+    }
+    
+    public Heads(string xpath)
     {
         Locator = By.XPath(xpath);
     }
-    
 }

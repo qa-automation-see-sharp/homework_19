@@ -27,10 +27,4 @@ public class TablePage : BasePage
         NavigateTo(Url);
         return this;
     }
-
-    public TablePage ClickOnRowWithText(string text)
-    {
-         Table?.GetCellFromRows(text).Click();
-         return this;
-    }
 }

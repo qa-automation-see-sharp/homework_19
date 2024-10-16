@@ -8,10 +8,10 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
 
 public abstract class BaseElement
 {
-    protected internal IWebElement? WrappedIWebElement { get; private set; }
-    public By? Locator { get; init; }
+    protected internal IWebElement? WrappedIWebElement { get; internal set; }
+    public By? Locator { get; set; }
     public BaseElement? Parent { get; init; }
-    
+
     //Potential hidden recursion
     protected IWebElement FindElement()
     {
@@ -44,16 +44,34 @@ public abstract class BaseElement
                 elements => elements.Count == 0);
             return elements;
         }
-        else
+
+        if (Parent.WrappedIWebElement == null)
         {
             var parentElement = Parent.FindElement();
             var elements = WaitAndHandleExceptionOrResult(() => parentElement.FindElements(by)
-                    .Select(e => new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent}).ToList(),
+                    .Select(e =>
+                    {
+                        var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
+                        InitializationHelper.InitializeElements(element, element);
+                        return element;
+                    }).ToList(),
+                elements => elements.Count == 0);
+            return elements;
+        }
+        else
+        {
+            var elements = WaitAndHandleExceptionOrResult(() => Parent.FindElement().FindElements(by)
+                    .Select(e =>
+                    {
+                        var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
+                        InitializationHelper.InitializeElements(element, element);
+                        return element;
+                    }).ToList(),
                 elements => elements.Count == 0);
             return elements;
         }
     }
-    
+
 
     public string GetTagName()
     {

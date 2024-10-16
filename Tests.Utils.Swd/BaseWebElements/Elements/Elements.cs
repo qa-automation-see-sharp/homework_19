@@ -1,3 +1,4 @@
+using System.Collections;
 using OpenQA.Selenium;
 using Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
 
@@ -6,17 +7,33 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements;
 public class Elements<T> : BaseElement
     where T : BaseElement, new()
 {
+    private IList<T> _collection = new List<T>();
+
     public Elements(By locator, BaseElement parent)
     {
         Locator = locator;
         Parent = parent;
     }
 
-    public int Count => FindElements<T>().Count();
+    public int Count => _collection.Count;
+    
+    public void FindElements()
+    {
+        _collection = FindElements<T>().ToList();
+    }
 
-    public IEnumerable<T> GetElements() => FindElements<T>();
+    public IList<T> GetElements()
+    {
+        return _collection;
+    }
 
-    public T GetElement(int index) => FindElements<T>().ElementAt(index);
+    public T GetElement(int index)
+    {
+        return _collection.ElementAt(index);
+    }
 
-    public T? FirstOrDefault(Func<T, bool> condition) => FindElements<T>().FirstOrDefault(condition);
+    public T? FirstOrDefault(Func<T, bool> condition)
+    {
+        return _collection.FirstOrDefault(condition);
+    }
 }

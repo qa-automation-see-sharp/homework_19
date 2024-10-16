@@ -10,12 +10,12 @@ namespace Tests.Utils.Swd.Helpers;
 
 public static class InitializationHelper
 {
-    public static void InitializeElements(object page)
+    public static void InitializeElements(object? page)
     {
         InitializeElements(page, null);
     }
 
-    public static void InitializeElements(object page, BaseElement? parent)
+    public static void InitializeElements(object? page, BaseElement? parent)
     {
         var members = page.GetType()
             .GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -24,38 +24,40 @@ public static class InitializationHelper
         foreach (var member in members)
         {
             var findByAttr = member.GetCustomAttribute<FindByAttribute>(true);
+            object? instanceToCreate = null;
 
-            if (findByAttr != null)
+            if (findByAttr == null) continue;
+
+            var locator = findByAttr.GetLocator();
+            switch (member)
             {
-                var locator = findByAttr.GetLocator();
-                if (member is FieldInfo field)
+                case FieldInfo field:
                 {
                     var fieldValue = field.GetValue(page);
                     if (fieldValue is null)
                     {
-                        var element = CreateElement(field.FieldType, locator, parent);
-                        field.SetValue(page, element);
+                        instanceToCreate = CreateElement(field.FieldType, locator, parent);
+                        field.SetValue(page, instanceToCreate);
                     }
 
-                    if (IsCompositeElement(field.FieldType))
-                    {
-                        InitializeElements(field.GetValue(page), field.GetValue(page) as BaseElement);
-                    }
+                    break;
                 }
-                else if (member is PropertyInfo property)
+                case PropertyInfo property:
                 {
                     var propertyValue = property.GetValue(page);
                     if (propertyValue is null)
                     {
-                        var element = CreateElement(property.PropertyType, locator, parent);
-                        property.SetValue(page, element);
+                        instanceToCreate = CreateElement(property.PropertyType, locator, parent);
+                        property.SetValue(page, instanceToCreate);
                     }
 
-                    if (IsCompositeElement(property.PropertyType))
-                    {
-                        InitializeElements(property.GetValue(page), property.GetValue(page) as BaseElement);
-                    }
+                    break;
                 }
+            }
+
+            if (instanceToCreate != null && IsCompositeElement(instanceToCreate.GetType()))
+            {
+                InitializeElements(instanceToCreate, instanceToCreate as BaseElement);
             }
         }
     }
@@ -77,6 +79,8 @@ public static class InitializationHelper
             return new Table { Locator = locator, Parent = parent };
         if (element == typeof(Row))
             return new Row { Locator = locator, Parent = parent };
+        if (element == typeof(Column))
+            return new Column { Locator = locator, Parent = parent };
         if (IsGenericType(element))
         {
             var elementType = element.GetGenericArguments()[0];
@@ -88,13 +92,13 @@ public static class InitializationHelper
         throw new ArgumentException("Invalid element type");
     }
 
-    private static bool IsGenericType(Type type)
-    {
-        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Elements<>);
-    }
-
     private static bool IsCompositeElement(Type type)
     {
         return typeof(BaseElement).IsAssignableFrom(type) && type.IsClass;
+    }
+
+    private static bool IsGenericType(Type type)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Elements<>);
     }
 }
