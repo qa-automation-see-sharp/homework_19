@@ -1,20 +1,26 @@
 using OpenQA.Selenium;
 using Tests.Utils.Swd.Attribute;
 using Tests.Utils.Swd.BaseWebElements.Elements.Abstractions;
+using Tests.Utils.Swd.Helpers;
 
 namespace Tests.Utils.Swd.BaseWebElements.Elements.Table;
 
 public class Column : BaseElement
 {
-    [FindBy(XPath = "//div[contains(@class,'rt-tbody')]/div/div[contains(@class,'rt-tr -odd') or contains(@class,'rt-tr -even')]/div[1]")]
+    public int ColumnNumber { get; set; }
+
     public Elements<Element> Cells { get; set; }
 
-    public Column()
+    public Elements<Element> FindCells()
     {
-    }
+        Cells = new Elements<Element>(Locator, this);
+        Cells.FindElements();
+        var cells = Cells.GetAll();
+        for (var i = 0; i < cells.Count; i++)
+        {
+            cells[i].Locator = By.XPath(TableXPathHelper.GetCellFromTheColumnXPath(i + 1, ColumnNumber));
+        }
 
-    public Column(string xpath)
-    {
-        Locator = By.XPath(xpath);
+        return Cells;
     }
 }

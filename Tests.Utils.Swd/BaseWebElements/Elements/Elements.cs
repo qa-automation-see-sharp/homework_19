@@ -22,7 +22,7 @@ public class Elements<T> : BaseElement
         _collection = FindElements<T>().ToList();
     }
 
-    public IList<T> GetElements()
+    public IList<T> GetAll()
     {
         return _collection;
     }
