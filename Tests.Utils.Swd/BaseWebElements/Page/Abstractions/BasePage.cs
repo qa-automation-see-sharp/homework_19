@@ -49,7 +49,7 @@ public class BasePage
     {
         WaitAndHandleExceptions(() => Driver.Navigate().Forward());
     }
-    
+
     public void SwitchToAnotherWindow()
     {
         var currentWindowHandle = Driver.CurrentWindowHandle;
@@ -60,7 +60,6 @@ public class BasePage
             .SwitchTo().Window(windowToSwitch)
             .SwitchTo().Window(currentWindowHandle);
     }
-
 
     public void SwitchToTabByUrl(string url)
     {
@@ -74,6 +73,11 @@ public class BasePage
         }
     }
 
+    public AlertHandle SwitchToAlert()
+    {
+        Driver.SwitchTo().Alert();
+        return new();
+    }
 
     public void Close()
     {
