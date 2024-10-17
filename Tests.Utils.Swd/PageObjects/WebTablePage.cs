@@ -6,7 +6,7 @@ using Tests.Utils.Swd.BaseWebElements.Page.Abstractions;
 
 namespace Tests.Utils.Swd.PageObjects;
 
-public class TablePage : BasePage
+public class WebTablePage : BasePage
 {
     private string Url => "https://demoqa.com/webtables";
     
@@ -16,13 +16,13 @@ public class TablePage : BasePage
     [FindBy(XPath = "//div[@class='rt-tbody']")]
     public Table? Table { get; set; }
 
-    public TablePage OpenInBrowser(BrowserNames name, params string[] args)
+    public WebTablePage OpenInBrowser(BrowserNames name, params string[] args)
     {
         OpenWith(name, args);
         return this;
     }
 
-    public TablePage NavigateToPage()
+    public WebTablePage NavigateToPage()
     {
         NavigateTo(Url);
         return this;

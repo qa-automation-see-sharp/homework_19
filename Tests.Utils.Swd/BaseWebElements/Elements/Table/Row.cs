@@ -8,7 +8,7 @@ namespace Tests.Utils.Swd.BaseWebElements.Elements.Table;
 public class Row : BaseElement
 {
     public int RowNumber { get; set; }
-    
+
     public Elements<Element> Cells { get; set; }
 
     public Elements<Element> FindCells()

@@ -4,25 +4,26 @@ using static Tests.Utils.Swd.BaseWebElements.Browser.BrowserNames;
 
 namespace Tests.NUnit.Ui.Tests;
 
+//TODO: finish the test as described in homework   
 [TestFixture]
-public class TablePageTests
+public class WebTablePageTests
 {
-    private readonly TablePage _tablePage = new();
+    private readonly WebTablePage _webTablePage = new();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _tablePage.OpenInBrowser(Chrome, "--start-maximized");
-        _tablePage.NavigateToPage();
+        _webTablePage.OpenInBrowser(Chrome, "--start-maximized");
+        _webTablePage.NavigateToPage();
     }
 
     [Test]
-    public void OpenWebTablePage_TitleIsCorrect()
+    public void FirstWebTableTest()
     {
-        var title = _tablePage.Title?.GetText();
-        var rows = _tablePage.Table?.FindRows().GetAll();
+        var title = _webTablePage.Title?.GetText();
+        var rows = _webTablePage.Table?.FindRows().GetAll();
         var rowCells = rows?[2].FindCells().GetAll();
-        var columns = _tablePage.Table?.FindColumns().GetAll();
+        var columns = _webTablePage.Table?.FindColumns().GetAll();
         var columnCells = columns?[0].FindCells().GetAll();
 
         Assert.Multiple(() =>
@@ -40,6 +41,6 @@ public class TablePageTests
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _tablePage.Close();
+        _webTablePage.Close();
     }
 }

@@ -50,16 +50,28 @@ public class BasePage
         WaitAndHandleExceptions(() => Driver.Navigate().Forward());
     }
     
-    public void SwitchToNewWindow()
+    public void SwitchToAnotherWindow()
     {
-        var currentWindow = Driver.CurrentWindowHandle;
-        var windowToSwitch = Driver.WindowHandles.FirstOrDefault(w => w != currentWindow);
-        WaitAndHandleExceptions(() => Driver.SwitchTo().Window(windowToSwitch));
+        var currentWindowHandle = Driver.CurrentWindowHandle;
+        var windows = Driver.WindowHandles;
+        var windowToSwitch = windows.FirstOrDefault(w => w != currentWindowHandle);
+
+        Driver
+            .SwitchTo().Window(windowToSwitch)
+            .SwitchTo().Window(currentWindowHandle);
     }
-    
-    public void SwitchToNewWindow(string windowName)
+
+
+    public void SwitchToTabByUrl(string url)
     {
-        WaitAndHandleExceptions(() => Driver.SwitchTo().Window(windowName));
+        var windows = Driver.WindowHandles;
+
+        foreach (var window in windows)
+        {
+            Driver.SwitchTo().Window(window);
+            var currentUrl = Driver.Url;
+            if (currentUrl == url) break;
+        }
     }
 
 

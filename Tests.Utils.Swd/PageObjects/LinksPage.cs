@@ -28,7 +28,7 @@ public class LinksPage : BasePage
     public MainPage ClickOnLinkThatOpensNewWindow()
     {
         SimpleLink?.Click();
-        SwitchToNewWindow();
+        SwitchToAnotherWindow();
         return new MainPage();
     }
     

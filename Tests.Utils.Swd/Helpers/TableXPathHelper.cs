@@ -21,7 +21,7 @@ public static class TableXPathHelper
     {
         return $"//div[{cellIndex}]/div[contains(@class,'rt-tr -odd') or contains(@class,'rt-tr -even')]/div[{columnIndex}]";
     }
-    
+
     public static string GetHeaderCellXPath(int columnIndex)
     {
         return $"//div[@class ='rt-thead -header']/div/div[{columnIndex}]/div[@class='rt-resizable-header-content']]";
