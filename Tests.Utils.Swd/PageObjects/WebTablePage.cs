@@ -18,7 +18,7 @@ public class WebTablePage : BasePage
     public Table? Table { get; set; }
 
     [FindBy(XPath = "//div[@class='rt-resizable-header-content' and text()='Age']")]
-    public Table? Age { get; set; }
+    public Element? Age { get; set; }
 
     [FindBy(XPath = "//button[@id='addNewRecordButton']")]
 
