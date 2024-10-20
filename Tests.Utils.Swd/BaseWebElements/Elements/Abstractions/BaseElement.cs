@@ -61,18 +61,18 @@ public abstract class BaseElement
         else
         {
             var elements = WaitAndHandleExceptionOrResult(() =>
-                {
-                    var parentElement = Parent.WrappedIWebElement;
-                    var elements = parentElement.FindElements(by)
-                        .Select(e =>
-                        {
-                            var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
-                            InitializationHelper.InitializeElements(element, element);
-                            return element;
-                        }).ToList();
-                    
-                    return elements;
-                },
+            {
+                var parentElement = Parent.WrappedIWebElement;
+                var elements = parentElement.FindElements(by)
+                    .Select(e =>
+                    {
+                        var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
+                        InitializationHelper.InitializeElements(element, element);
+                        return element;
+                    }).ToList();
+
+                return elements;
+            },
                 elements => elements.Count == 0);
             return elements;
         }

@@ -1,19 +1,17 @@
-using Tests.Utils.Swd.Helpers;
+using Tests.Utils.Swd.BaseWebElements.Browser;
 using Tests.Utils.Swd.PageObjects;
-using static Tests.Utils.Swd.BaseWebElements.Browser.BrowserNames;
 
 namespace Tests.NUnit.Ui.Tests;
 
-//TODO: finish the test as described in homework   
 [TestFixture]
 public class WebTablePageTests
 {
     private readonly WebTablePage _webTablePage = new();
 
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
+    [SetUp]
+    public void SetUp()
     {
-        _webTablePage.OpenInBrowser(Chrome, "--start-maximized");
+        _webTablePage.OpenInBrowser(BrowserNames.Chrome, "--start-maximized", "--headless");
         _webTablePage.NavigateToPage();
     }
 
@@ -37,9 +35,64 @@ public class WebTablePageTests
             Assert.That(columnCells?[2].GetText(), Is.EqualTo("Kierra"));
         });
     }
+    [Test]
+    public void WebTables_SortByAge()
+    {
+        _webTablePage.SortByAge();
+        var columns = _webTablePage.Table?.FindColumns().GetAll();
+        var columnCellsName = columns?[0].FindCells().GetAll();
+        var columnCellsAge = columns?[2].FindCells().GetAll();
 
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
+        Assert.Multiple(() =>
+        {
+            Assert.That(columnCellsName?[0].GetText(), Is.EqualTo("Kierra"));
+            Assert.That(columnCellsName?[1].GetText(), Is.EqualTo("Cierra"));
+            Assert.That(columnCellsName?[2].GetText(), Is.EqualTo("Alden"));
+            Assert.That(columnCellsAge?[0].GetText(), Is.EqualTo("29"));
+            Assert.That(columnCellsAge?[1].GetText(), Is.EqualTo("39"));
+            Assert.That(columnCellsAge?[2].GetText(), Is.EqualTo("45"));
+        });
+    }
+
+    [Test]
+    //This test should not pass, due to a bug. See chat to reproduce.
+    public void WebTables_AddAndDeleteRecord()
+    {
+        _webTablePage.Add();
+
+        _webTablePage.AddFirstName("Olesia");
+        _webTablePage.AddLastName("Zaremba");
+        _webTablePage.AddEmail("zaremba_olesia@email.com");
+        _webTablePage.InputAge(25);
+        _webTablePage.AddSalary(1500000);
+        _webTablePage.AddDepartment("Product Development");
+
+        _webTablePage.Submit();
+
+        var rowsAfterAdd = _webTablePage.Table?.FindRows().GetAll();
+        Assert.That(rowsAfterAdd?.Count, Is.EqualTo(4));
+
+        var rowCellsAdd = rowsAfterAdd?[3].FindCells().GetAll();
+
+        _webTablePage.DeleteRow(3);
+
+        var rowsDelete = _webTablePage.Table?.FindRows().GetAll();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(rowsAfterAdd?.Count, Is.EqualTo(4));
+            Assert.That(rowCellsAdd?[0].GetText(), Is.EqualTo("Olesia"));
+            Assert.That(rowCellsAdd?[1].GetText(), Is.EqualTo("Zaremba"));
+            Assert.That(rowCellsAdd?[2].GetText(), Is.EqualTo("25"));
+            Assert.That(rowCellsAdd?[3].GetText(), Is.EqualTo("zaremba_olesia@email.com"));
+            Assert.That(rowCellsAdd?[4].GetText(), Is.EqualTo("1500000"));
+            Assert.That(rowCellsAdd?[5].GetText(), Is.EqualTo("Product Development"));
+            Assert.That(rowsDelete?.Count, Is.EqualTo(3));
+        });
+    }
+
+    [TearDown]
+    public void TearDown()
     {
         _webTablePage.Close();
     }
