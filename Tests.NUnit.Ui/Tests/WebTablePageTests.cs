@@ -55,7 +55,6 @@ public class WebTablePageTests
     }
 
     [Test]
-    //This test should not pass, due to a bug. See chat to reproduce.
     public void WebTables_AddAndDeleteRecord()
     {
         _webTablePage.Add();
@@ -69,26 +68,27 @@ public class WebTablePageTests
 
         _webTablePage.Submit();
 
-        var rowsAfterAdd = _webTablePage.Table?.FindRows().GetAll();
-        Assert.That(rowsAfterAdd?.Count, Is.EqualTo(4));
+        var rows = _webTablePage.Table?.FindRows().GetAll();
+        Assert.That(rows?.Count, Is.EqualTo(4));
 
-        var rowCellsAdd = rowsAfterAdd?[3].FindCells().GetAll();
-
-        _webTablePage.DeleteRow(3);
-
-        var rowsDelete = _webTablePage.Table?.FindRows().GetAll();
+        var rowCellsAdd = rows?[3].FindCells().GetAll();
 
         Assert.Multiple(() =>
         {
-            Assert.That(rowsAfterAdd?.Count, Is.EqualTo(4));
+            Assert.That(rows?.Count, Is.EqualTo(4));
             Assert.That(rowCellsAdd?[0].GetText(), Is.EqualTo("Olesia"));
             Assert.That(rowCellsAdd?[1].GetText(), Is.EqualTo("Zaremba"));
             Assert.That(rowCellsAdd?[2].GetText(), Is.EqualTo("25"));
             Assert.That(rowCellsAdd?[3].GetText(), Is.EqualTo("zaremba_olesia@email.com"));
             Assert.That(rowCellsAdd?[4].GetText(), Is.EqualTo("1500000"));
             Assert.That(rowCellsAdd?[5].GetText(), Is.EqualTo("Product Development"));
-            Assert.That(rowsDelete?.Count, Is.EqualTo(3));
         });
+
+        _webTablePage.DeleteRow(4);
+
+        rows = _webTablePage.Table?.FindRows().GetAll();
+
+        Assert.That(rows?.Count, Is.EqualTo(3));
     }
 
     [TearDown]

@@ -1,10 +1,8 @@
 using Tests.Utils.Swd.BaseWebElements.Browser;
 using Tests.Utils.Swd.PageObjects;
-using Xunit;
 
 namespace Tests.xUnit.Ui.Tests;
-
-public class ButtonsPageTests
+public class ButtonsPageTests : IDisposable
 {
     private ButtonsPage _buttonsPage;
 
