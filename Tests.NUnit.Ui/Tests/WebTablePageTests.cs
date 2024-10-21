@@ -54,6 +54,7 @@ public class WebTablePageTests
         });
     }
 
+    //TODO I would suggest to divide this test into two separate tests for adding and deleting records 
     [Test]
     public void WebTables_AddAndDeleteRecord()
     {

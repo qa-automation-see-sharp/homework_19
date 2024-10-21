@@ -112,8 +112,10 @@ public class WebTablePage : BasePage
         return this;
     }
 
+    //TODO: Why don't you use the Table class to find the delete button?
     public WebTablePage DeleteRow(int row)
     {
+        //TODO: method WebDriverFactory.Driver.FindElement is unsafe.
         var deleteButton = WebDriverFactory.Driver.FindElement(By.XPath(DeleteButtonXPath(row)));
         deleteButton.Click();
 

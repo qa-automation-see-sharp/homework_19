@@ -51,6 +51,7 @@ public class WebTablePageTests : IDisposable
         Assert.Equal("45", columnCellsAge?[2].GetText());
     }
 
+    //TODO I would suggest to divide this test into two separate tests for adding and deleting records 
     [Fact]
     public void WebTables_AddAndDeleteRecord()
     {
