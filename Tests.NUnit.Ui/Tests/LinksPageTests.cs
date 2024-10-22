@@ -3,7 +3,6 @@ using Tests.Utils.Swd.PageObjects;
 
 namespace Tests.NUnit.Ui.Tests;
 
-//TODO: Create set of tests for Links page
 [TestFixture]
 public class LinksPageTests
 {
