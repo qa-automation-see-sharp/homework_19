@@ -1,3 +1,5 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using Tests.Utils.Swd.Attribute;
 using Tests.Utils.Swd.BaseWebElements.Browser;
 using Tests.Utils.Swd.BaseWebElements.Elements;
@@ -38,7 +40,7 @@ public class TextBoxPage : BasePage
         OpenWith(name, args);
         return this;
     }
-    
+
     public TextBoxPage NavigateToPage()
     {
         NavigateTo(Url);
@@ -66,6 +68,13 @@ public class TextBoxPage : BasePage
     public TextBoxPage EnterPermanentAddress(string permanentAddress)
     {
         PermanentAddress?.SendKeys(permanentAddress);
+        return this;
+    }    
+
+    public TextBoxPage ScrollDownUsingKeys()
+    {
+        Actions actions = new Actions(WebDriverFactory.Driver);
+        actions.SendKeys(Keys.PageDown).Perform();
         return this;
     }
 }
