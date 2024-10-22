@@ -41,18 +41,18 @@ public class WebTablePageTests
     {
         //Arrange
         var initialRows = _webTablePage.Table?.FindRows().GetAll();
-        var addDisplayed = _webTablePage.Add.IsDisplayed();
+        var addDisplayed = _webTablePage.Add!.IsDisplayed();
         var addEnabled = _webTablePage.Add.IsEnabled();
 
         //Act
         _webTablePage.Add.Click();
         _webTablePage.FillOutRegistrationForm();
-        var submitDisplayed = _webTablePage.Submit.IsDisplayed();
+        var submitDisplayed = _webTablePage.Submit!.IsDisplayed();
         var submitEnabled = _webTablePage.Submit.IsEnabled();
         _webTablePage.Submit.Click();
         var rows = _webTablePage.Table?.FindRows().GetAll();
         var rowCells = rows?[3].FindCells().GetAll();
-        var isNewRowAdded = rows.Count - initialRows.Count == 1;
+        var isNewRowAdded = rows!.Count - initialRows!.Count == 1;
 
         //Assert
         Assert.Multiple(() =>
@@ -82,7 +82,7 @@ public class WebTablePageTests
         //Act
         _webTablePage.Delete.Click();
         var rows = _webTablePage.Table?.FindRows().GetAll();
-        var isNewRowDeleted = initialRows.Count - rows.Count == 1;
+        var isNewRowDeleted = initialRows!.Count - rows!.Count == 1;
 
         //Assert
         Assert.Multiple(() =>
@@ -102,13 +102,13 @@ public class WebTablePageTests
         var columnCellsAscending = columnsAscending?[2].FindCells().GetAll();
 
         //Act
-        var intListAscending = WebTablePage.ConvertToIntegerList(columnCellsAscending);
+        var intListAscending = WebTablePage.ConvertToIntegerList(columnCellsAscending!);
         var isAscending = _webTablePage.IsSortedAscending(intListAscending);
 
         _webTablePage.AgeColumnHeader.Click();
         var columnsDescending = _webTablePage.Table?.FindColumns().GetAll();
         var columnCellsDescending = columnsDescending?[2].FindCells().GetAll();
-        var intListDescending = WebTablePage.ConvertToIntegerList(columnCellsDescending);
+        var intListDescending = WebTablePage.ConvertToIntegerList(columnCellsDescending!);
         var isDescending = _webTablePage.IsSortedDescending(intListDescending);
 
         //Assert
