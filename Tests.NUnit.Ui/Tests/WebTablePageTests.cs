@@ -78,11 +78,19 @@ public class WebTablePageTests
     [Test, Order(4)]
     public void DeleteElementFromTheTable()
     {
-        _webTablePage.DeleteFirstRecordButton.Click();
+        _webTablePage.DeleteFirstRecordButton?.Click();
         
         var rows = _webTablePage.Table?.FindRows().GetAll();
         
         Assert.That(rows?.Count, Is.EqualTo(3));
+    }
+    
+    [Test, Order(5)]
+    public void SortTableDataByAge()
+    {
+        _webTablePage.AgeHeader?.Click();
+        
+        
     }
 
     [OneTimeTearDown]

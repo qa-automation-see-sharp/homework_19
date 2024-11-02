@@ -49,6 +49,9 @@ public class WebTablePage : BasePage
     
     [FindBy(Id = "delete-record-1")]
     public Button? DeleteFirstRecordButton { get; set; }
+    
+    [FindBy(LinkText = "Age")]
+    public Element? AgeHeader { get; set; }
 
     public WebTablePage OpenInBrowser(BrowserNames name, params string[] args)
     {
