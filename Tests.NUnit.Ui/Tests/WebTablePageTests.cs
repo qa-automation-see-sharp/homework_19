@@ -76,7 +76,7 @@ public class WebTablePageTests
     }
     
     [Test, Order(4)]
-    public void DeleteElementFromTheTable()
+    public void DeleteElementFromTheTable_ShouldDecreaseRowCount()
     {
         _webTablePage.DeleteFirstRecordButton?.Click();
         
