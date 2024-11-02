@@ -90,6 +90,17 @@ public class WebTablePageTests
     {
         _webTablePage.AgeHeader?.Click();
         
+        var columns = _webTablePage.Table?.FindColumns().GetAll();
+        var firstNameColumnByCell = columns?[0].FindCells().GetAll();
+        var ageColumnByCell = columns?[2].FindCells().GetAll();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(firstNameColumnByCell?[0].GetText(), Is.EqualTo("Alden"));
+            Assert.That(firstNameColumnByCell?[2].GetText(), Is.EqualTo("Liuda"));
+            Assert.That(ageColumnByCell?[0].GetText(), Is.EqualTo("45"));
+            Assert.That(ageColumnByCell?[2].GetText(), Is.EqualTo("25"));
+        });
         
     }
 
