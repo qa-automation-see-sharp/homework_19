@@ -50,17 +50,28 @@ public class WebTablePageTests
     [Test, Order(3)]
     public void FillInRegistrationForm_ReturnSavedData()
     {
+        _webTablePage.ClickAddButton();
         _webTablePage
             .EnterFistName("Liuda")
             .EnterLastName("Test")
             .EnterEmail("test@test.com")
             .EnterAge("25")
-            .EnterSalary("$12345")
+            .EnterSalary("12345")
             .EnterDepartment("QA")
             .ClickSubmitButton();
         
+        var rows = _webTablePage.Table?.FindRows().GetAll();
+        var newRowCells = rows?[3].FindCells().GetAll();
+
         Assert.Multiple(() =>
         {
+            Assert.That(rows?.Count, Is.EqualTo(4));
+            Assert.That(newRowCells?[0].GetText(), Is.EqualTo("Liuda"));
+            Assert.That(newRowCells?[1].GetText(), Is.EqualTo("Test"));
+            Assert.That(newRowCells?[3].GetText(), Is.EqualTo("test@test.com"));
+            Assert.That(newRowCells?[2].GetText(), Is.EqualTo("25"));
+            Assert.That(newRowCells?[4].GetText(), Is.EqualTo("12345"));
+            Assert.That(newRowCells?[5].GetText(), Is.EqualTo("QA"));
         });
     }
 
