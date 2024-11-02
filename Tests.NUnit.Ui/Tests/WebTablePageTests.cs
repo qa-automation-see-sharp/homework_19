@@ -17,7 +17,7 @@ public class WebTablePageTests
         _webTablePage.NavigateToPage();
     }
 
-    [Test]
+    [Test, Order(1)]
     public void FirstWebTableTest()
     {
         var title = _webTablePage.Title?.GetText();
@@ -35,6 +35,32 @@ public class WebTablePageTests
             Assert.That(columnCells?[0].GetText(), Is.EqualTo("Cierra"));
             Assert.That(columnCells?[1].GetText(), Is.EqualTo("Alden"));
             Assert.That(columnCells?[2].GetText(), Is.EqualTo("Kierra"));
+        });
+    }
+
+    [Test, Order(2)]
+    public void ClickAddButton_ReturnRegistrationForm()
+    {
+        _webTablePage.ClickAddButton();
+        var registrationFormIsDisplayed = _webTablePage.RegistrationForm.IsDisplayed();
+        
+        Assert.That(registrationFormIsDisplayed, Is.True);
+    }
+
+    [Test, Order(3)]
+    public void FillInRegistrationForm_ReturnSavedData()
+    {
+        _webTablePage
+            .EnterFistName("Liuda")
+            .EnterLastName("Test")
+            .EnterEmail("test@test.com")
+            .EnterAge("25")
+            .EnterSalary("$12345")
+            .EnterDepartment("QA")
+            .ClickSubmitButton();
+        
+        Assert.Multiple(() =>
+        {
         });
     }
 
