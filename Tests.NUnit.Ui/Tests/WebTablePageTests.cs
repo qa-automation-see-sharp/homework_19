@@ -74,6 +74,16 @@ public class WebTablePageTests
             Assert.That(newRowCells?[5].GetText(), Is.EqualTo("QA"));
         });
     }
+    
+    [Test, Order(4)]
+    public void DeleteElementFromTheTable()
+    {
+        _webTablePage.DeleteFirstRecordButton.Click();
+        
+        var rows = _webTablePage.Table?.FindRows().GetAll();
+        
+        Assert.That(rows?.Count, Is.EqualTo(3));
+    }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()

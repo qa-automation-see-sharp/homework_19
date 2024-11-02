@@ -23,6 +23,9 @@ public class WebTablePage : BasePage
     [FindBy(XPath = "//div[@role='dialog']/div[@role='document']//div[@class='modal-header']")]
     public Element? RegistrationForm { get; set; }
     
+    [FindBy(XPath = "//body/div[@role='dialog']/div[@role='document']//span[.='x']")]
+    public Button? CloseRegistrationFormButton { get; set; }
+    
     [FindBy(XPath = "/html//input[@id='firstName']")]
     public Element? FirstNameInput { get; set; }
     
@@ -43,6 +46,9 @@ public class WebTablePage : BasePage
     
     [FindBy(XPath = "/html//button[@id='submit']")]
     public Button? SubmitButton { get; set; }
+    
+    [FindBy(Id = "delete-record-1")]
+    public Button? DeleteFirstRecordButton { get; set; }
 
     public WebTablePage OpenInBrowser(BrowserNames name, params string[] args)
     {
