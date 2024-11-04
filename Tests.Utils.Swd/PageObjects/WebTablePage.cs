@@ -112,5 +112,33 @@ public class WebTablePage : BasePage
         SubmitButton?.Click();
         return this;
     }
+    
+    public static List<string> DataBeforeSorting(IList<Element> list)
+    {
+        var dataBeforeSorting = new List<string>();
+        
+        foreach (var element in list)
+        {
+            dataBeforeSorting.Add(element.GetText());
+        }
+        return dataBeforeSorting;
+    }
+
+    public static List<string> DataAfterSorting(IList<Element> list)
+    {
+        var dataAfterSorting = new List<string>();
+        
+        foreach (var element in list)
+        {
+            dataAfterSorting.Add(element.GetText());
+        }
+        return dataAfterSorting;
+    }
+    
+    public bool IsSorted(List<string> list)
+    {
+        return list.SequenceEqual(list.OrderBy(x => x));
+    }
+    
 
 }

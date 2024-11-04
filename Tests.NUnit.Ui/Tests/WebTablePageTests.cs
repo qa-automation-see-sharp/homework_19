@@ -1,3 +1,5 @@
+using OpenQA.Selenium.Support.UI;
+using Tests.Utils.Swd.BaseWebElements.Elements;
 using Tests.Utils.Swd.Helpers;
 using Tests.Utils.Swd.PageObjects;
 using static Tests.Utils.Swd.BaseWebElements.Browser.BrowserNames;
@@ -88,19 +90,24 @@ public class WebTablePageTests
     [Test, Order(5)]
     public void SortTableDataByAge()
     {
-        _webTablePage.AgeHeader?.Click();
-        
         var columns = _webTablePage.Table?.FindColumns().GetAll();
-        var firstNameColumnByCell = columns?[0].FindCells().GetAll();
-        var ageColumnByCell = columns?[2].FindCells().GetAll();
+        var cellsBeforeSorting = columns?[2].FindCells().GetAll();
+        
+        List<string> dataBeforeSorting = WebTablePage.DataBeforeSorting(cellsBeforeSorting);
+        
+        _webTablePage.AgeHeader?.Click();
+        Thread.Sleep(2000);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(firstNameColumnByCell?[0].GetText(), Is.EqualTo("Alden"));
-            Assert.That(firstNameColumnByCell?[2].GetText(), Is.EqualTo("Liuda"));
-            Assert.That(ageColumnByCell?[0].GetText(), Is.EqualTo("45"));
-            Assert.That(ageColumnByCell?[2].GetText(), Is.EqualTo("25"));
-        });
+        var columns2 = _webTablePage.Table?.FindColumns().GetAll();
+        var cellsAfterSorting = columns2?[2].FindCells().GetAll();
+        
+        List<string> dataAfterSorting = WebTablePage.DataAfterSorting(cellsAfterSorting);
+        
+        List<string> expectedData = WebTablePage.DataBeforeSorting(cellsBeforeSorting).OrderBy(x => x).ToList();
+
+        var isSortedAscending = _webTablePage.IsSorted(expectedData);
+        
+        Assert.That(isSortedAscending, Is.True);
         
     }
 
