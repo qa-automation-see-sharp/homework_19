@@ -108,7 +108,6 @@ public class WebTablePageTests
         var isSortedAscending = _webTablePage.IsSorted(expectedData);
         
         Assert.That(isSortedAscending, Is.True);
-        
     }
 
     [OneTimeTearDown]
