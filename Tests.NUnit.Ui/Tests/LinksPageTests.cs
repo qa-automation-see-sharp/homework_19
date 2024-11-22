@@ -13,7 +13,7 @@ public class LinksPageTests
     public void OneTimeSetUp()
     {
         _linksPage = new LinksPage();
-        _linksPage.OpenInBrowser(BrowserNames.Chrome);
+        _linksPage.OpenInBrowser(BrowserNames.Chrome, "--start-maximized", "--headless");
         _linksPage.NavigateToPage();
     }
     

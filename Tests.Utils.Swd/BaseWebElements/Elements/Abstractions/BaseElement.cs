@@ -16,66 +16,77 @@ public abstract class BaseElement
     protected IWebElement FindElement()
     {
         var by = Locator;
-        if (Parent is null)
+        if (by == null)
+            throw new InvalidOperationException("Locator must be provided.");
+
+        IWebElement element;
+
+        if (Parent == null)
         {
-            var element = WaitAndHandleExceptionOrResult(
+            element = WaitAndHandleExceptionOrResult(
                 () => WebDriverFactory.Driver.FindElement(by),
-                e => e is null);
-            return element;
+                e => e == null);
         }
         else
         {
             var parentElement = Parent.FindElement();
-            var element = WaitAndHandleExceptionOrResult(
+            element = WaitAndHandleExceptionOrResult(
                 () => parentElement.FindElement(by),
-                e => e is null);
-            return element;
+                e => e == null);
         }
+
+        return element ?? throw new NoSuchElementException("Element not found.");
     }
 
     //Potential hidden recursion
     protected IEnumerable<T> FindElements<T>() where T : BaseElement, new()
     {
         var by = Locator;
-        if (Parent is null)
-        {
-            var elements = WaitAndHandleExceptionOrResult(() => WebDriverFactory.Driver.FindElements(by)
-                    .Select(e => new T { WrappedIWebElement = e, Locator = by }).ToList(),
-                elements => elements.Count == 0);
-            return elements;
-        }
+        if (by == null)
+            throw new InvalidOperationException("Locator must be provided.");
 
-        if (Parent.WrappedIWebElement == null)
+        IList<T> elements;
+
+        if (Parent == null)
         {
-            var parentElement = Parent.FindElement();
-            var elements = WaitAndHandleExceptionOrResult(() => parentElement.FindElements(by)
-                    .Select(e =>
-                    {
-                        var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
-                        InitializationHelper.InitializeElements(element, element);
-                        return element;
-                    }).ToList(),
+            elements = WaitAndHandleExceptionOrResult(() => WebDriverFactory.Driver.FindElements(by)
+                .Select(e => new T { WrappedIWebElement = e, Locator = by }).ToList(),
                 elements => elements.Count == 0);
-            return elements;
         }
         else
         {
-            var elements = WaitAndHandleExceptionOrResult(() =>
-            {
-                var parentElement = Parent.WrappedIWebElement;
-                var elements = parentElement.FindElements(by)
-                    .Select(e =>
-                    {
-                        var element = new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent };
-                        InitializationHelper.InitializeElements(element, element);
-                        return element;
-                    }).ToList();
-
-                return elements;
-            },
+            var parentElement = Parent.FindElement();
+            elements = WaitAndHandleExceptionOrResult(() => parentElement.FindElements(by)
+                .Select(e => new T { WrappedIWebElement = e, Locator = by, Parent = this.Parent })
+                .ToList(),
                 elements => elements.Count == 0);
-            return elements;
         }
+
+        return elements;
+    }
+
+    public IWebElement FindElement(By by)
+    {
+        if (by == null)
+            throw new InvalidOperationException("Locator must be provided.");
+
+        IWebElement element;
+
+        if (Parent == null)
+        {
+            element = WaitAndHandleExceptionOrResult(
+                () => WebDriverFactory.Driver.FindElement(by),
+                e => e == null);
+        }
+        else
+        {
+            var parentElement = Parent.FindElement();
+            element = WaitAndHandleExceptionOrResult(
+                () => parentElement.FindElement(by),
+                e => e == null);
+        }
+
+        return element ?? throw new NoSuchElementException("Element not found.");
     }
 
 

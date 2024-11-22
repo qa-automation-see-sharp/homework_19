@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using Tests.Utils.Swd.Attribute;
 using Tests.Utils.Swd.BaseWebElements.Browser;
 using Tests.Utils.Swd.BaseWebElements.Elements;
@@ -24,8 +25,6 @@ public class WebTablePage : BasePage
 
     public Button? AddButton { get; set; }
 
-    private string DeleteButtonXPath(int rowNumber) => $"//span[@id='delete-record-{rowNumber}']";
-
     [FindBy(XPath = "//div[contains(@class, 'modal-content')]//input[@id='firstName']")]
     public Element? FirstName { get; set; }
 
@@ -46,7 +45,7 @@ public class WebTablePage : BasePage
 
     [FindBy(XPath = "//div[contains(@class, 'modal-content')]//button[@id='submit']")]
     public Element? SubmitButton { get; set; }
-
+    private By DeleteButtonLocator(int row) => By.XPath($"//span[@id='delete-record-{row}']");
 
     public WebTablePage OpenInBrowser(BrowserNames name, params string[] args)
     {
@@ -112,12 +111,11 @@ public class WebTablePage : BasePage
         return this;
     }
 
-    //TODO: Why don't you use the Table class to find the delete button?
     public WebTablePage DeleteRow(int row)
     {
-        //TODO: method WebDriverFactory.Driver.FindElement is unsafe.
-        var deleteButton = WebDriverFactory.Driver.FindElement(By.XPath(DeleteButtonXPath(row)));
-        deleteButton.Click();
+        var deleteButton = Table?.FindElement(DeleteButtonLocator(row));
+
+        deleteButton?.Click();
 
         return this;
     }

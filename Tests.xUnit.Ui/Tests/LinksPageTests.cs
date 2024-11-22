@@ -11,7 +11,7 @@ public class LinksPageTests : IAsyncLifetime
     public Task InitializeAsync()
     {
         _linksPage = new LinksPage();
-        _linksPage.OpenInBrowser(BrowserNames.Chrome);
+        _linksPage.OpenInBrowser(BrowserNames.Chrome, "--start-maximized", "--headless");
         _linksPage.NavigateToPage();
 
         return Task.CompletedTask;

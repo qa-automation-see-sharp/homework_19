@@ -1,3 +1,4 @@
+using OpenQA.Selenium;
 using Tests.Utils.Swd.Attribute;
 using Tests.Utils.Swd.BaseWebElements.Browser;
 using Tests.Utils.Swd.BaseWebElements.Elements;
@@ -89,7 +90,7 @@ public class CheckBoxPage : BasePage
             return elements.Any() && elements.All(IsElementVisible);
 
         }
-        catch (NullReferenceException e)
+        catch (NoSuchElementException e)
         {
             return false;
         }

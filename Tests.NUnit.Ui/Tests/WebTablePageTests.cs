@@ -54,9 +54,8 @@ public class WebTablePageTests
         });
     }
 
-    //TODO I would suggest to divide this test into two separate tests for adding and deleting records 
     [Test]
-    public void WebTables_AddAndDeleteRecord()
+    public void WebTables_AddRecord()
     {
         _webTablePage.Add();
 
@@ -86,10 +85,28 @@ public class WebTablePageTests
         });
 
         _webTablePage.DeleteRow(4);
+    }
 
-        rows = _webTablePage.Table?.FindRows().GetAll();
+    [Test]
+    public void WebTables_DeleteRecord()
+    {
+        var rowsBeforeDelete = _webTablePage.Table?.FindRows().GetAll();
 
-        Assert.That(rows?.Count, Is.EqualTo(3));
+        _webTablePage.DeleteRow(1);
+
+        var rowsAfterDelete = _webTablePage.Table?.FindRows().GetAll();
+        var rowCellsDelete = rowsAfterDelete?[0].FindCells().GetAll();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(rowsAfterDelete.Count, Is.EqualTo(rowsBeforeDelete.Count - 1));
+            Assert.That(rowCellsDelete?[0].GetText(), Is.EqualTo("Alden"));
+            Assert.That(rowCellsDelete?[1].GetText(), Is.EqualTo("Cantrell"));
+            Assert.That(rowCellsDelete?[2].GetText(), Is.EqualTo("45"));
+            Assert.That(rowCellsDelete?[3].GetText(), Is.EqualTo("alden@example.com"));
+            Assert.That(rowCellsDelete?[4].GetText(), Is.EqualTo("12000"));
+            Assert.That(rowCellsDelete?[5].GetText(), Is.EqualTo("Compliance"));
+        });
     }
 
     [TearDown]
